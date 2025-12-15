@@ -13,7 +13,7 @@ def seed_users():
     for u in users:
         try:
             c.execute(
-                "INSERT INTO users (username,password,role) VALUES (?,?,?)",
+                "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
                 u
             )
         except:
