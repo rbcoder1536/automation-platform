@@ -1,0 +1,123 @@
+🚀 Automation Platform – Business Process Improvement Tool
+
+A full-stack workflow automation platform built with Flask, designed to streamline task approvals, track activity, and improve operational efficiency.
+The application includes role-based authentication, task management, and audit logging, and is deployed on cloud infrastructure.
+
+🔗 Live Demo:
+https://automation-platform-c5pk.onrender.com
+
+(First load may take up to 60 seconds due to free-tier cold start)
+
+📌 Features
+🔐 Authentication & Authorization
+
+Secure login system
+
+Role-based access:
+
+Admin
+
+Manager
+
+Employee
+
+📝 Task Management
+
+Employees can create tasks
+
+Managers can approve or reject tasks
+
+Task status tracking (Pending / Approved / Rejected)
+
+📊 Dashboard
+
+Real-time overview:
+
+Total tasks
+
+Approved tasks
+
+Rejected tasks
+
+Pending tasks
+
+Clean, responsive UI
+
+🧾 Audit Logs
+
+Every action is recorded
+
+Tracks:
+
+Task ID
+
+Action performed
+
+User
+
+Timestamp
+
+☁️ Cloud Deployment
+
+Deployed on Render
+
+Production-ready Gunicorn WSGI server
+
+Handles cold starts and stateless environments
+
+🛠️ Tech Stack
+
+Backend
+
+Python 3.11
+
+Flask
+
+Gunicorn
+
+SQLite (auto-initialized on startup)
+
+Frontend
+
+HTML5
+
+CSS3
+
+JavaScript
+
+Deployment
+
+Render (Free Tier)
+
+GitHub
+
+📂 Project Structure
+automation-platform/
+│
+├── backend/
+│   ├── app.py
+│   ├── database.py
+│   ├── seed_users.py
+│   └── __init__.py
+│
+├── templates/
+│   ├── login.html
+│   ├── dashboard.html
+│   └── audit.html
+│
+├── static/
+│   ├── styles.css
+│   └── script.js
+│
+├── requirements.txt
+├── runtime.txt
+├── Procfile
+└── .gitignore
+
+🔑 Default Credentials
+Role	Username	Password
+Admin	admin	admin123
+Manager	manager	manager123
+Employee	employee	employee123
+
+⚠️ These are demo credentials only.
