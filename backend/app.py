@@ -156,5 +156,12 @@ def audit():
         role=session["role"]
     )
 
+@app.route("/seed")
+def seed():
+    from backend.seed_users import seed_users
+    seed_users()
+    return "Users seeded"
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
