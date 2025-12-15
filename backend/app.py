@@ -1,26 +1,52 @@
-from flask import Flask, render_template, request, redirect, session
-import os
+from flask import Flask, render_template, request, redirect, session, url_for
 from backend.database import connect, create_tables
-
-create_tables()
+import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
+app.secret_key = os.environ.get("SECRET_KEY", "render-demo-secret")
 
+# -------------------------------
+# DATABASE INITIALIZATION
+# -------------------------------
 create_tables()
 
-# ---------- LOGIN ----------
+def auto_seed_users():
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM users")
+    count = c.fetchone()[0]
+
+    if count == 0:
+        users = [
+            ("admin", "admin123", "Admin"),
+            ("manager", "manager123", "Manager"),
+            ("employee", "employee123", "Employee")
+        ]
+        for u in users:
+            c.execute(
+                "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+                u
+            )
+        conn.commit()
+
+    conn.close()
+
+auto_seed_users()
+
+# -------------------------------
+# AUTHENTICATION
+# -------------------------------
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        u = request.form["username"]
-        p = request.form["password"]
+        username = request.form["username"]
+        password = request.form["password"]
 
         conn = connect()
         c = conn.cursor()
         c.execute(
             "SELECT id, role FROM users WHERE username=? AND password=?",
-            (u, p)
+            (username, password)
         )
         user = c.fetchone()
         conn.close()
@@ -32,12 +58,16 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
-# ---------- DASHBOARD ----------
+
+# -------------------------------
+# DASHBOARD
+# -------------------------------
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -77,28 +107,33 @@ def dashboard():
         role=session["role"]
     )
 
-# ---------- CREATE TASK ----------
+
+# -------------------------------
+# CREATE TASK
+# -------------------------------
 @app.route("/tasks/create", methods=["POST"])
 def create_task():
-    if session["role"] != "Employee":
+    if "user_id" not in session or session["role"] != "Employee":
         return redirect("/dashboard")
+
+    title = request.form["title"]
+    assigned_to = request.form["assigned_to"]
 
     conn = connect()
     c = conn.cursor()
     c.execute("""
         INSERT INTO tasks (title, assigned_to, status, created_by)
         VALUES (?, ?, 'Pending', ?)
-    """, (
-        request.form["title"],
-        request.form["assigned_to"],
-        session["user_id"]
-    ))
+    """, (title, assigned_to, session["user_id"]))
     conn.commit()
     conn.close()
 
     return redirect("/dashboard")
 
-# ---------- LOG ACTION ----------
+
+# -------------------------------
+# AUDIT LOGGING
+# -------------------------------
 def log_action(task_id, action):
     conn = connect()
     c = conn.cursor()
@@ -109,30 +144,40 @@ def log_action(task_id, action):
     conn.commit()
     conn.close()
 
-# ---------- APPROVE / REJECT ----------
-@app.route("/tasks/approve/<int:id>")
-def approve(id):
-    if session["role"] == "Manager":
-        conn = connect()
-        c = conn.cursor()
-        c.execute("UPDATE tasks SET status='Approved' WHERE id=?", (id,))
-        conn.commit()
-        conn.close()
-        log_action(id, "Approved")
+
+@app.route("/tasks/approve/<int:task_id>")
+def approve_task(task_id):
+    if session.get("role") != "Manager":
+        return redirect("/dashboard")
+
+    conn = connect()
+    c = conn.cursor()
+    c.execute("UPDATE tasks SET status='Approved' WHERE id=?", (task_id,))
+    conn.commit()
+    conn.close()
+
+    log_action(task_id, "Approved")
     return redirect("/dashboard")
 
-@app.route("/tasks/reject/<int:id>")
-def reject(id):
-    if session["role"] == "Manager":
-        conn = connect()
-        c = conn.cursor()
-        c.execute("UPDATE tasks SET status='Rejected' WHERE id=?", (id,))
-        conn.commit()
-        conn.close()
-        log_action(id, "Rejected")
+
+@app.route("/tasks/reject/<int:task_id>")
+def reject_task(task_id):
+    if session.get("role") != "Manager":
+        return redirect("/dashboard")
+
+    conn = connect()
+    c = conn.cursor()
+    c.execute("UPDATE tasks SET status='Rejected' WHERE id=?", (task_id,))
+    conn.commit()
+    conn.close()
+
+    log_action(task_id, "Rejected")
     return redirect("/dashboard")
 
-# ---------- AUDIT LOGS ----------
+
+# -------------------------------
+# AUDIT LOGS VIEW
+# -------------------------------
 @app.route("/audit")
 def audit():
     if "user_id" not in session:
@@ -152,18 +197,24 @@ def audit():
     logs = c.fetchall()
     conn.close()
 
-    return render_template(
-        "audit.html",
-        logs=logs,
-        role=session["role"]
-    )
-
-@app.route("/seed")
-def seed():
-    from backend.seed_users import seed_users
-    seed_users()
-    return "Users seeded"
+    return render_template("audit.html", logs=logs, role=session["role"])
 
 
+# -------------------------------
+# DEBUG (SAFE TO REMOVE LATER)
+# -------------------------------
+@app.route("/debug-users")
+def debug_users():
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT id, username, role FROM users")
+    users = c.fetchall()
+    conn.close()
+    return {"users": users}
+
+
+# -------------------------------
+# LOCAL RUN
+# -------------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
