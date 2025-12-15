@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="layout">
+<aside class="sidebar">
+  <h2>⚙ Automation</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a class="active">Audit Logs</a>
+  <div class="sidebar-footer">
+    {{ role }}<br>
+    <a href="/logout">Logout</a>
+  </div>
+</aside>
+
+<main class="content">
+<div class="page-header">
+<h1>Audit Logs</h1>
+<p>Complete activity history</p>
+</div>
+
+<div class="table-card">
+<table>
+<tr>
+<th>Task</th><th>Action</th><th>User</th><th>Time</th>
+</tr>
+{% for l in logs %}
+<tr>
+<td>{{ l[0] }}</td>
+<td>{{ l[1] }}</td>
+<td>{{ l[2] }}</td>
+<td>{{ l[3] }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</main>
+</div>
+</body>
+</html>

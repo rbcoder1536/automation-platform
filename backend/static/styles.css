@@ -1,0 +1,253 @@
+/* ===================== RESET ===================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px at 10% 10%, #2b2f55 0%, transparent 60%),
+    radial-gradient(800px at 90% 20%, #1f8ef1 0%, transparent 55%),
+    linear-gradient(180deg, #0f1225, #0b0d1a);
+  color: #fff;
+}
+
+/* ===================== LAYOUT ===================== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar {
+  width: 260px;
+  padding: 28px 22px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 36px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: linear-gradient(135deg, #6c5ce7, #8e7cff);
+  box-shadow: 0 8px 24px rgba(108,92,231,0.35);
+  color: white;
+}
+
+.sidebar-footer {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.sidebar-footer a {
+  color: #ff7675;
+  text-decoration: none;
+}
+
+/* ===================== MAIN ===================== */
+.content {
+  flex: 1;
+  padding: 48px 52px;
+}
+
+/* ===================== HEADER ===================== */
+.page-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-header p {
+  opacity: 0.65;
+  margin-top: 6px;
+  margin-bottom: 42px;
+}
+
+/* ===================== STATS ===================== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 26px;
+  margin-bottom: 48px;
+}
+
+.stat-card {
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.stat-card:hover::after {
+  opacity: 1;
+}
+
+.stat-card span {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.stat-card h2 {
+  font-size: 44px;
+  margin-top: 12px;
+}
+
+.stat-card.approved { border-left: 5px solid #00e676; }
+.stat-card.rejected { border-left: 5px solid #ff5252; }
+.stat-card.pending  { border-left: 5px solid #ffd166; }
+
+/* ===================== TABLE CARD ===================== */
+.table-card {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(14px);
+  border-radius: 26px;
+  padding: 28px;
+}
+
+.table-card h3 {
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+/* ===================== TABLE ===================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight: 500;
+  opacity: 0.65;
+  padding: 14px 10px;
+}
+
+td {
+  padding: 16px 10px;
+}
+
+tr {
+  transition: background 0.2s;
+}
+
+tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ===================== BADGES ===================== */
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.badge.approved { background: rgba(0,230,118,0.2); color: #00e676; }
+.badge.rejected { background: rgba(255,82,82,0.2); color: #ff5252; }
+.badge.pending  { background: rgba(255,209,102,0.25); color: #ffd166; }
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  padding: 6px 16px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.25s;
+}
+
+.btn.approve {
+  background: linear-gradient(135deg,#00e676,#1de9b6);
+  color: #002b18;
+}
+
+.btn.reject {
+  background: linear-gradient(135deg,#ff5252,#ff1744);
+  color: white;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* ===================== LOGIN ===================== */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  width: 380px;
+  padding: 36px;
+  border-radius: 26px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+}
+
+.login-box h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: white;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 18px;
+  border: none;
+  background: linear-gradient(135deg,#6c5ce7,#8e7cff);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
