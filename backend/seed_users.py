@@ -1,4 +1,4 @@
-from database import connect
+from backend.database import connect
 
 conn = connect()
 c = conn.cursor()

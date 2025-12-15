@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import os
-from database import connect, create_tables
+from backend.database import connect, create_tables
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")
